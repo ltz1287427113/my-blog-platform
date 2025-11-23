@@ -1,0 +1,102 @@
+/* 自定义Tailwind配置 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义颜色变量 */
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #60a5fa;
+  --secondary: #64748b;
+  --accent: #f97316;
+  --light: #f8fafc;
+  --dark: #1e293b;
+  --success: #10b981;
+  --danger: #ef4444;
+}
+
+/* 基础样式 */
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 font-sans antialiased;
+  }
+  
+  h1 {
+    @apply text-[clamp(1.8rem,4vw,2.8rem)] font-bold text-slate-900;
+  }
+  
+  h2 {
+    @apply text-[clamp(1.5rem,3vw,2.2rem)] font-semibold text-slate-800;
+  }
+  
+  h3 {
+    @apply text-[clamp(1.2rem,2vw,1.6rem)] font-semibold text-slate-800;
+  }
+}
+
+/* 自定义组件 */
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark focus:ring-primary-light;
+  }
+  
+  .btn-secondary {
+    @apply bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400;
+  }
+  
+  .btn-accent {
+    @apply bg-accent text-white hover:bg-orange-600 focus:ring-orange-400;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300;
+  }
+  
+  .nav-link {
+    @apply px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:text-primary;
+  }
+  
+  .nav-link.active {
+    @apply text-primary bg-blue-50;
+  }
+}
+
+/* 动画效果 */
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+  
+  .pulse-light {
+    animation: pulseLight 2s infinite;
+  }
+}
+
+/* 关键帧动画 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulseLight {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑文章 - Modern Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/public/css/custom.css">
+</head>
+<body>
+    <main class="container mx-auto p-4">
+        <h1>编辑文章</h1>
+        <form id="edit-post-form">
+            <input type="text" placeholder="标题" id="title" class="input-field mb-4">
+            <textarea placeholder="内容" id="content" rows="10" class="input-field mb-4"></textarea>
+            <button type="submit" class="btn btn-primary">保存</button>
+        </form>
+    </main>
+    <script type="module">
+        import { getPost, updatePost } from '/public/js/posts.js';
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+        async function loadPost() {
+            const post = await getPost(postId);
+            document.getElementById('title').value = post.title;
+            document.getElementById('content').value = post.content;
+        }
+        loadPost();
+        document.getElementById('edit-post-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            await updatePost(postId, { title, content });
+            alert('文章更新成功！');
+            window.location.href = '/admin/dashboard.html';
+        });
+    </script>
+</body>
+</html>

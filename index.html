@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Blog - 分享有价值的思考</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome 图标 -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 自定义样式 -->
+  <link rel="stylesheet" href="/public/css/custom.css">
+  <!-- 预加载字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-['Inter']">
+  <!-- 导航栏 -->
+  <header id="navbar" class="fixed w-full bg-white/90 backdrop-blur-sm shadow-sm z-50 transition-all duration-300">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16 md:h-20">
+        <!-- Logo -->
+        <a href="/" class="flex items-center space-x-2">
+          <span class="text-primary text-2xl"><i class="fa fa-pencil-square-o"></i></span>
+          <span class="text-xl font-bold text-slate-900">ModernBlog</span>
+        </a>
+
+        <!-- 桌面端导航 -->
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="/" class="nav-link active">首页</a>
+          <a href="/about.html" class="nav-link">关于</a>
+          <a href="/contact.html" class="nav-link">联系</a>
+          <div id="desktop-auth-menu" class="flex items-center space-x-4">
+            <a href="/login.html" class="btn btn-secondary text-sm">登录</a>
+            <a href="/register.html" class="btn btn-primary text-sm">注册</a>
+          </div>
+        </nav>
+
+        <!-- 移动端菜单按钮 -->
+        <button id="mobile-menu-button" class="md:hidden text-slate-700 hover:text-primary">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 移动端导航菜单 -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-slate-200 fade-in">
+      <div class="container mx-auto px-4 py-3 space-y-3">
+        <a href="/" class="block nav-link active">首页</a>
+        <a href="/about.html" class="block nav-link">关于</a>
+        <a href="/contact.html" class="block nav-link">联系</a>
+        <div id="mobile-auth-menu" class="flex flex-col space-y-2 pt-2 border-t border-slate-200">
+          <a href="/login.html" class="btn btn-secondary w-full justify-center">登录</a>
+          <a href="/register.html" class="btn btn-primary w-full justify-center">注册</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+    <!-- 英雄区 -->
+    <section class="mb-12 slide-up">
+      <div class="card p-8 md:p-12 bg-gradient-to-br from-blue-50 to-indigo-50 border-none">
+        <h1 class="mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-600">
+          分享有价值的思考与见解
+        </h1>
+        <p class="text-slate-600 text-lg md:text-xl mb-6 max-w-3xl">
+          探索技术、生活、设计与创意的精彩内容，与志同道合的人一起成长
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="/register.html" class="btn btn-primary px-6 py-2.5 text-base">
+            加入我们 <i class="fa fa-arrow-right ml-2"></i>
+          </a>
+          <a href="#posts" class="btn btn-secondary px-6 py-2.5 text-base">
+            浏览文章 <i class="fa fa-book ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 文章列表区 -->
+    <section id="posts" class="mb-16">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="flex items-center">
+          <i class="fa fa-file-text-o text-primary mr-2"></i> 最新文章
+        </h2>
+        <div class="hidden md:flex items-center space-x-2">
+          <button id="sort-newest" class="px-3 py-1 text-sm bg-primary text-white rounded-md">最新发布</button>
+          <button id="sort-popular" class="px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 rounded-md transition-colors">热门推荐</button>
+        </div>
+      </div>
+
+      <!-- 文章网格 -->
+      <div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 文章卡片将通过JS动态加载 -->
+        <div id="loading-indicator" class="col-span-full flex justify-center py-12">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </div>
+
+      <!-- 分页 -->
+      <div id="pagination" class="mt-10 flex justify-center hidden">
+        <nav class="flex items-center space-x-2">
+          <button id="prev-page" class="px-3 py-1.5 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="fa fa-chevron-left"></i>
+          </button>
+          <span id="page-info" class="px-3 py-1.5 text-slate-600">第 1 页 / 共 0 页</span>
+          <button id="next-page" class="px-3 py-1.5 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="fa fa-chevron-right"></i>
+          </button>
+        </nav>
+      </div>
+    </section>
+
+    <!-- 订阅区 -->
+    <section class="card p-8 bg-slate-900 text-white slide-up">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="mb-4">订阅最新文章</h2>
+        <p class="text-slate-300 mb-6">
+          第一时间获取优质内容更新，不错过任何精彩文章
+        </p>
+        <form id="subscribe-form" class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+          <input 
+            type="email" 
+            placeholder="输入你的邮箱" 
+            class="input-field bg-slate-800 border-slate-700 text-white placeholder-slate-400 flex-grow"
+            required
+          >
+          <button type="submit" class="btn btn-accent whitespace-nowrap">
+            立即订阅 <i class="fa fa-paper-plane ml-2"></i>
+          </button>
+        </form>
+        <p class="text-slate-400 text-sm mt-3">
+          我们尊重你的隐私，不会向第三方分享你的信息
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-slate-900 text-slate-400 py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <span class="text-primary text-2xl"><i class="fa fa-pencil-square-o"></i></span>
+            <span class="text-xl font-bold text-white">ModernBlog</span>
+          </div>
+          <p class="mb-4">
+            分享有价值的思考与见解，连接志同道合的人
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+              <i class="fa fa-github text-xl"></i>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+              <i class="fa fa-twitter text-xl"></i>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+              <i class="fa fa-linkedin text-xl"></i>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+              <i class="fa fa-instagram text-xl"></i>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-white font-semibold mb-4">快速链接</h3>
+          <ul class="space-y-2">
+            <li><a href="/" class="hover:text-primary transition-colors">首页</a></li>
+            <li><a href="/about.html" class="hover:text-primary transition-colors">关于我们</a></li>
+            <li><a href="/contact.html" class="hover:text-primary transition-colors">联系我们</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors">隐私政策</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors">使用条款</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-white font-semibold mb-4">文章分类</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-primary transition-colors">技术开发</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors">设计创意</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors">生活方式</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors">职场成长</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors">读书笔记</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-white font-semibold mb-4">联系我们</h3>
+          <ul class="space-y-2">
+            <li class="flex items-start">
+              <i class="fa fa-envelope-o mt-1 mr-2 text-primary"></i>
+              <span>contact@modernblog.com</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-map-marker mt-1 mr-2 text-primary"></i>
+              <span>北京市朝阳区创意园区A座1001室</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-phone mt-1 mr-2 text-primary"></i>
+              <span>+86 10 8888 7777</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-800 mt-10 pt-6 text-center text-sm">
+        <p>&copy; 2025 ModernBlog. 保留所有权利.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 回到顶部按钮 -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 invisible transition-all duration-300 hover:bg-primary-dark">
+    <i class="fa fa-chevron-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script type="module">
+    import { Auth, Posts } from '/public/js/supabase.js';
+    import { formatDate, truncateText } from '/public/js/utils.js';
+
+    // 全局变量
+    let currentPage = 1;
+    const postsPerPage = 6;
+    let totalPages = 0;
+
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 初始化导航栏
+      initNavbar();
+      
+      // 检查用户登录状态
+      await checkAuthState();
+      
+      // 加载文章列表
+      await loadPosts();
+      
+      // 初始化回到顶部按钮
+      initBackToTop();
+      
+      // 初始化订阅表单
+      initSubscribeForm();
+    });
+
+    // 初始化导航栏
+    function initNavbar() {
+      // 移动端菜单切换
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+
+      // 导航栏滚动效果
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('shadow-md');
+          navbar.classList.remove('shadow-sm');
+        } else {
+          navbar.classList.remove('shadow-md');
+          navbar.classList.add('shadow-sm');
+        }
+      });
+    }
+
+    // 检查用户认证状态
+    async function checkAuthState() {
+      const user = await Auth.getCurrentUser();
+      updateAuthMenu(user);
+
+      // 监听认证状态变化
+      Auth.onAuthStateChange((_event, session) => {
+        updateAuthMenu(session?.user);
+      });
+    }
+
+    // 更新认证菜单
+    function updateAuthMenu(user) {
+      const desktopAuthMenu = document.getElementById('desktop-auth-menu');
+      const mobileAuthMenu = document.getElementById('mobile-auth-menu');
+
+      if (user) {
+        // 已登录状态
+        desktopAuthMenu.innerHTML = `
+          <div class="relative group">
+            <button class="flex items-center space-x-2 focus:outline-none">
+              <img src="${user.user_metadata?.avatar_url || 'https://picsum.photos/200'}" alt="用户头像" class="w-8 h-8 rounded-full object-cover border-2 border-transparent group-hover:border-primary transition-colors">
+              <span class="hidden lg:inline-block font-medium">${user.user_metadata?.username || user.email.split('@')[0]}</span>
+              <i class="fa fa-chevron-down text-xs"></i>
+            </button>
+            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden group-hover:block z-10">
+              <a href="/admin/dashboard.html" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+                <i class="fa fa-tachometer mr-2"></i> 管理后台
+              </a>
+              <a href="#" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50" id="sign-out-btn">
+                <i class="fa fa-sign-out mr-2"></i> 退出登录
+              </a>
+            </div>
+          </div>
+        `;
+
+        mobileAuthMenu.innerHTML = `
+          <div class="flex items-center space-x-3 p-2 border-b border-slate-200">
+            <img src="${user.user_metadata?.avatar_url || 'https://picsum.photos/200'}" alt="用户头像" class="w-10 h-10 rounded-full object-cover">
+            <div>
+              <p class="font-medium text-slate-900">${user.user_metadata?.username || user.email.split('@')[0]}</p>
+              <p class="text-xs text-slate-500">${user.email}</p>
+            </div>
+          </div>
+          <a href="/admin/dashboard.html" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+            <i class="fa fa-tachometer mr-2"></i> 管理后台
+          </a>
+          <a href="#" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50" id="mobile-sign-out-btn">
+            <i class="fa fa-sign-out mr-2"></i> 退出登录
+          </a>
+        `;
+
+        // 绑定退出登录事件
+        document.getElementById('sign-out-btn')?.addEventListener('click', async (e) => {
+          e.preventDefault();
+          await Auth.signOut();
+          window.location.reload();
+        });
+
+        document.getElementById('mobile-sign-out-btn')?.addEventListener('click', async (e) => {
+          e.preventDefault();
+          await Auth.signOut();
+          window.location.reload();
+        });
+      } else {
+        // 未登录状态（默认）
+        desktopAuthMenu.innerHTML = `
+          <a href="/login.html" class="btn btn-secondary text-sm">登录</a>
+          <a href="/register.html" class="btn btn-primary text-sm">注册</a>
+        `;
+
+        mobileAuthMenu.innerHTML = `
+          <a href="/login.html" class="btn btn-secondary w-full justify-center">登录</a>
+          <a href="/register.html" class="btn btn-primary w-full justify-center">注册</a>
+        `;
+      }
+    }
+
+    // 加载文章列表
+    async function loadPosts() {
+      const loadingIndicator = document.getElementById('loading-indicator');
+      const postsGrid = document.getElementById('posts-grid');
+      const pagination = document.getElementById('pagination');
+      const pageInfo = document.getElementById('page-info');
+
+      // 显示加载状态
+      loadingIndicator.classList.remove('hidden');
+      postsGrid.innerHTML = '';
+
+      try {
+        // 获取文章数据
+        const { posts, total, error } = await Posts.getPublishedPosts(postsPerPage, currentPage);
+        
+        if (error) throw error;
+
+        // 计算总页数
+        totalPages = Math.ceil(total / postsPerPage);
+
+        // 更新分页信息
+        pageInfo.textContent = `第 ${currentPage} 页 / 共 ${totalPages} 页`;
+        
+        // 禁用/启用分页按钮
+        document.getElementById('prev-page').disabled = currentPage === 1;
+        document.getElementById('next-page').disabled = currentPage === totalPages;
+
+        // 渲染文章卡片
+        if (posts.length > 0) {
+          postsGrid.innerHTML = posts.map(post => `
+            <article class="card hover:translate-y-[-5px] transition-transform duration-300">
+              <div class="relative h-48 overflow-hidden">
+                <img 
+                  src="${post.featured_image_url || `https://picsum.photos/seed/${post.id}/800/400`}" 
+                  alt="${post.title}"
+                  class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                >
+                <div class="absolute top-3 left-3 bg-primary/90 text-white text-xs font-medium px-2 py-1 rounded">
+                  ${new Date(post.created_at).toLocaleDateString()}
+                </div>
+              </div>
+              <div class="p-6">
+                <div class="flex items-center mb-3">
+                  <img 
+                    src="${post.users.avatar_url || 'https://picsum.photos/200'}" 
+                    alt="${post.users.username}"
+                    class="w-8 h-8 rounded-full object-cover mr-2"
+                  >
+                  <span class="text-sm text-slate-600">${post.users.username}</span>
+                </div>
+                <h3 class="mb-3 line-clamp-2">
+                  <a href="/post.html?id=${post.id}" class="hover:text-primary transition-colors">
+                    ${post.title}
+                  </a>
+                </h3>
+                <p class="text-slate-600 text-sm mb-4 line-clamp-3">
+                  ${truncateText(post.excerpt || post.content, 120)}
+                </p>
+                <a href="/post.html?id=${post.id}" class="inline-flex items-center text-primary text-sm font-medium hover:underline">
+                  阅读全文 <i class="fa fa-arrow-right ml-1 text-xs"></i>
+                </a>
+              </div>
+            </article>
+          `).join('');
+        } else {
+          postsGrid.innerHTML = `
+            <div class="col-span-full text-center py-12">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
+                <i class="fa fa-file-text-o text-2xl text-slate-400"></i>
+              </div>
+              <h3 class="text-lg font-medium text-slate-700 mb-2">暂无文章</h3>
+              <p class="text-slate-500 mb-4">还没有发布的文章，敬请期待</p>
+              ${user ? '<a href="/admin/new-post.html" class="btn btn-primary">发布第一篇文章</a>' : ''}
+            </div>
+          `;
+        }
+
+        // 显示分页（如果有多个页面）
+        if (totalPages > 1) {
+          pagination.classList.remove('hidden');
+        } else {
+          pagination.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('加载文章失败:', error);
+        postsGrid.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 mb-4">
+              <i class="fa fa-exclamation-triangle text-2xl text-red-400"></i>
+            </div>
+            <h3 class="text-lg font-medium text-slate-700 mb-2">加载失败</h3>
+            <p class="text-slate-500 mb-4">${error.message || '获取文章列表时发生错误'}</p>
+            <button onclick="window.location.reload()" class="btn btn-secondary">重试</button>
+          </div>
+        `;
+      } finally {
+        // 隐藏加载状态
+        loadingIndicator.classList.add('hidden');
+      }
+    }
+
+    // 初始化分页事件
+    document.getElementById('prev-page')?.addEventListener('click', async () => {
+      if (currentPage > 1) {
+        currentPage--;
+        await loadPosts();
+        // 滚动到文章区
+        document.getElementById('posts').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    document.getElementById('next-page')?.addEventListener('click', async () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        await loadPosts();
+        // 滚动到文章区
+        document.getElementById('posts').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    // 初始化回到顶部按钮
+    function initBackToTop() {
+      const backToTopBtn = document.getElementById('back-to-top');
+      
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTopBtn.classList.remove('opacity-0', 'invisible');
+          backToTopBtn.classList.add('opacity-100', 'visible');
+        } else {
+          backToTopBtn.classList.add('opacity-0', 'invisible');
+          backToTopBtn.classList.remove('opacity-100', 'visible');
+        }
+      });
+      
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // 初始化订阅表单
+    function initSubscribeForm() {
+      const subscribeForm = document.getElementById('subscribe-form');
+      
+      subscribeForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // 这里只是模拟订阅功能，实际项目中需要连接后端
+        const emailInput = subscribeForm.querySelector('input[type="email"]');
+        const email = emailInput.value;
+        
+        // 显示成功提示
+        alert(`感谢订阅！我们会向 ${email} 发送最新文章通知`);
+        subscribeForm.reset();
+      });
+    }
+  </script>
+</body>
+</html>
