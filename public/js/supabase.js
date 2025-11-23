@@ -1,8 +1,8 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 // 替换为你的Supabase项目信息（必须修改！）
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabaseUrl = 'https://oszvlqmywgdyjfnrusoy.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zenZscW15d2dkeWpmbnJ1c295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NjY3NzksImV4cCI6MjA3OTQ0Mjc3OX0.kOwiWS_ydc4MJSndkWCB4NItkQmB_3sRt-SsQ4elPmc';
 
 // 创建Supabase客户端
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
